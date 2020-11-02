@@ -16,23 +16,19 @@ RUN make && \
     chmod 500 bin/gh
 
 FROM alpine:${ALPINE_VERSION}
-ARG BUILD_DATE
-ARG VCS_REF
-ARG VERSION=local
+ARG VERSION=
 ARG USERNAME=vscode
 ARG USER_UID=1000
 ARG USER_GID=1000
 LABEL \
     org.opencontainers.image.authors="paulo.alves.pereira@hey.com" \
-    org.opencontainers.image.created=$BUILD_DATE \
     org.opencontainers.image.version=$VERSION \
-    org.opencontainers.image.revision=$VCS_REF \
     org.opencontainers.image.url="https://github.com/pap/devcontainer-base" \
     org.opencontainers.image.documentation="https://github.com/pap/devcontainer-base" \
     org.opencontainers.image.source="https://github.com/pap/devcontainer-base" \
     org.opencontainers.image.title="Base Dev container" \
     org.opencontainers.image.description="Base Alpine container for Visual Studio Code Remote Containers development"
-ENV BASE_VERSION="${VERSION}-${BUILD_DATE}-${VCS_REF}"
+ENV BASE_VERSION="${VERSION}"
 WORKDIR /home/${USERNAME}
 ENTRYPOINT [ "/bin/zsh" ]
 ENV TZ=

@@ -7,9 +7,9 @@ plugins=(vscode git colorize docker docker-compose git-extras)
 source $ZSH/oh-my-zsh.sh
 
 # SSH key check
-test -f ~/.ssh/id_rsa
+test -f ~/.ssh/id_ed25519
 [ "$?" = 0 ] && SSHRSA_OK=yes
-[ -z $SSHRSA_OK ] && >&2 echo "[WARNING] No id_rsa SSH private key found, SSH functionalities might not work"
+[ -z $SSHRSA_OK ] && >&2 echo "[WARNING] No id_ed25519 SSH private key found, SSH functionalities might not work"
 
 # Timezone check
 [ -z $TZ ] && >&2 echo "[WARNING] TZ environment variable not set, time might be wrong!"
@@ -37,7 +37,7 @@ where code &> /dev/null && echo "VS code server `code -v | head -n 1`"
 if [ ! -z $DOCKERSOCK_OK ]; then
   echo "Docker server `docker version --format {{.Server.Version}}` | client `docker version --format {{.Client.Version}}`"
   echo "Docker-Compose `docker-compose version --short`"
-  alias alpine='docker run -it --rm alpine:3.12'
+  alias alpine='docker run -it --rm alpine:3.19'
   alias dive='docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock wagoodman/dive'
 fi
 echo

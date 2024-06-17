@@ -1,21 +1,7 @@
-ARG ALPINE_VERSION=3.13
-ARG DOCKER_VERSION=20.10.2
-ARG DOCKER_COMPOSE_VERSION=alpine-1.28.0
-ARG GOLANG_VERSION=1.15
+ARG ALPINE_VERSION=3.19
+ARG ARCH=
 
-FROM docker:${DOCKER_VERSION} AS docker-cli
-FROM docker/compose:${DOCKER_COMPOSE_VERSION} AS docker-compose
-
-FROM golang:${GOLANG_VERSION}-alpine${ALPINE_VERSION} AS gobuilder
-RUN apk add --no-cache --update -q git make
-ENV CGO_ENABLED=0
-WORKDIR /githubcli
-ARG GITHUBCLI_VERSION=v1.5.0
-RUN git clone --branch ${GITHUBCLI_VERSION} --single-branch --depth 1 https://github.com/cli/cli.git .
-RUN make && \
-    chmod 500 bin/gh
-
-FROM alpine:${ALPINE_VERSION}
+FROM ${ARCH}alpine:${ALPINE_VERSION}
 ARG VERSION=
 ARG USERNAME=vscode
 ARG USER_UID=1000
@@ -49,7 +35,7 @@ RUN adduser $USERNAME -s /bin/sh -D -u $USER_UID $USER_GID && \
     chmod 0440 /etc/sudoers.d/$USERNAME
 
 # Setup shell for root and ${USERNAME}
-RUN apk add -q --update --progress --no-cache zsh vim curl htop
+RUN apk add -q --update --progress --no-cache zsh vim curl htop github-cli docker docker-cli-compose
 ENTRYPOINT [ "/bin/zsh" ]
 ENV EDITOR=vim \
     LANG=en_US.UTF-8 \
@@ -69,9 +55,6 @@ RUN git clone --single-branch --depth 1 https://github.com/robbyrussell/oh-my-zs
     cp -r /home/${USERNAME}/.oh-my-zsh /root/.oh-my-zsh && \
     chown -R root:root /root/.oh-my-zsh
 
-# Docker and docker-compose
-COPY --from=docker-cli --chown=${USER_UID}:${USER_GID} /usr/local/bin/docker /usr/local/bin/docker
-COPY --from=docker-compose --chown=${USER_UID}:${USER_GID} /usr/local/bin/docker-compose /usr/local/bin/docker-compose
 ENV DOCKER_BUILDKIT=1
 # All possible docker host groups
 RUN G102=`getent group 102 | cut -d":" -f 1` && \
@@ -83,9 +66,6 @@ RUN G102=`getent group 102 | cut -d":" -f 1` && \
     addgroup ${USERNAME} $G102 && \
     addgroup ${USERNAME} $G976 && \
     addgroup ${USERNAME} $G1000
-
-# Github CLI
-COPY --from=gobuilder --chown=${USER_UID}:${USER_GID} /githubcli/bin/gh /usr/local/bin/gh
 
 # VSCode specific (speed up setup)
 RUN apk add -q --update --progress --no-cache libstdc++

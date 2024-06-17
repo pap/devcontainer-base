@@ -32,11 +32,7 @@ This is a list of the build arguments used and their default values:
 
 | Build Argument | default value |
 | -------------- | ------------- |
-| ALPINE_VERSION | 3.13 |
-| DOCKER_VERSION | 20.10.2 |
-| DOCKER_COMPOSE_VERSION | alpine-1.28.0 |
-| GOLANG_VERSION | 1.15 |
-| GITHUBCLI_VERSION | v1.5.0 |
+| ALPINE_VERSION | 3.19 |
 | USERNAME | vscode |
 | USER_UID | 1000 |
 | USER_GID | 1000 |
@@ -50,6 +46,7 @@ The default user for the generated image is `vscode`. Let's say you want the gen
 docker build \
   --build-arg VERSION=`date -u +"%Y%m%d"`-`git rev-parse --short HEAD` \
   --build-arg USERNAME=demo \
+  --platform <PLATFORM> \
   -t <IMAGE NAME>:<IMAGE TAG> .
 ```
 
@@ -60,8 +57,10 @@ The generated image will run under the `demo` user instead of the default `vscod
 To run a container using the generated docker image the following command can be used:
 
 ```sh
-docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock <IMAGE_ID>
+docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock -e TZ=<TIMEZONE> <IMAGE_ID>
 ```
+
+`-e TZ="Europe/Madrid"` will set the timezone to Madrid
 
 This command will run in interactive mode and remove the container we exit it. We are also mounting a volume that allows us to connect the container to the host docker socket.
 
@@ -70,6 +69,7 @@ This command will run in interactive mode and remove the container we exit it. W
 - [ ] Debian based images
 
 # Credits
+
 All the heavy lifting was made by [Quentin McGaw](https://github.com/qdm12/) the base container available here only has minor tweaks to the [base image created by Quentin](https://github.com/qdm12/basedevcontainer).
 
 ## License

@@ -36,8 +36,8 @@ echo "Running as user `whoami`"
 where code &> /dev/null && echo "VS code server `code -v | head -n 1`"
 if [ ! -z $DOCKERSOCK_OK ]; then
   echo "Docker server `docker version --format {{.Server.Version}}` | client `docker version --format {{.Client.Version}}`"
-  echo "Docker-Compose `docker-compose version --short`"
-  alias alpine='docker run -it --rm alpine:3.19'
+  echo "Docker-Compose `docker compose version --short`"
+  alias alpine='docker run -it --rm alpine:3.20'
   alias dive='docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock wagoodman/dive'
 fi
 echo

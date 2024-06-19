@@ -1,6 +1,6 @@
 # devcontainer-base
 
-This repository holds the base docker image used to build development containers for Visual Studio Code
+This repository holds an Alpine Linux docker image used to build development containers for Visual Studio Code
 
 ## Features
 
@@ -32,7 +32,7 @@ This is a list of the build arguments used and their default values:
 
 | Build Argument | default value |
 | -------------- | ------------- |
-| ALPINE_VERSION | 3.19 |
+| ALPINE_VERSION | 3.20 |
 | USERNAME | vscode |
 | USER_UID | 1000 |
 | USER_GID | 1000 |
@@ -63,10 +63,6 @@ docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock -e TZ=<TIMEZONE
 `-e TZ="Europe/Madrid"` will set the timezone to Madrid
 
 This command will run in interactive mode and remove the container we exit it. We are also mounting a volume that allows us to connect the container to the host docker socket.
-
-## TODO
-
-- [ ] Debian based images
 
 # Credits
 
